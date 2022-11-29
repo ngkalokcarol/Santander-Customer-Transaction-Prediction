@@ -99,8 +99,6 @@ train.groupby('target').size().plot(kind='pie',y = "target",label = "Type",autop
 
 Then, we checked the missing data and to make sure there is no missing data. Considering there are 200 features, we want to know if we can remove the highly correlated features. 
 
-Inspired by this notebook: https://www.kaggle.com/code/allunia/santander-customer-transaction-eda
-
 We plot the correlations between features and found out that there is no strong correlation between features, so we cannot directly eliminate the correlated features but need to use all the features.
 
 ![image](https://user-images.githubusercontent.com/50436546/204376599-f8db4bdb-a771-4207-9ecf-b34f40130792.png)
@@ -108,6 +106,16 @@ We plot the correlations between features and found out that there is no strong 
 Usually the features that is highly correlated with the target are more important than other features. We want to explore the correlation between each feature with our target, whether or not the customer make a specific transaction in the future. Again, there is no strong correlation, so we just going to use all the features at first.
 
 ![image](https://user-images.githubusercontent.com/50436546/204376660-f611e8ce-441a-40c6-a8a5-076d0782d516.png)
+
+```python
+plt.figure(figsize=(16,6))
+plt.title("Distribution of mean values per column in the train and test set")
+sns.distplot(train_df[features].mean(axis=0),color="magenta",kde=True,bins=120, label='train')
+sns.distplot(test_df[features].mean(axis=0),color="darkblue", kde=True,bins=120, label='test')
+plt.legend()
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/50436546/204636403-74646849-8047-4306-82f8-e5e42fdbc312.png)
 
 
 We also want to know if the training data and testing data are similar. If there is any fundamental difference, the model we train on training data cannot perform well on testing data.
@@ -383,7 +391,7 @@ print("CV score: {:<8.5f}".format(roc_auc_score(target, oof)))
 #### 3.4.3 Feature Importance
 Feature importance assigns the score of input features based on their importance to predict the taget. In this case, the feature importance show how all of these features contribute to predicting if the customer will make this specific transaction in the future. The more the features will be responsible to predict the outcome, the higher will be their scores.
 
-![image](https://user-images.githubusercontent.com/50436546/204377389-637b67e7-c27b-46bd-bdd2-90b01fd3dffb.png)
+![image](https://user-images.githubusercontent.com/50436546/204635915-55162c88-4789-4b7a-a0fc-175a200bc8cc.png)
 
 
 This graph above shows the features that have the 10 highest feature importance scores. The score itself does not necessarily have business value, but we can know from this graph that some features contribute more than others. We have the top 5 features, var_174, var_110, var_53, var_22, and var_146. The description of these features is not provided with us, so we can only conclude that these are the most important features of a customer that influence their transaction behavior.
@@ -405,3 +413,8 @@ This graph above shows the features that have the 10 highest feature importance 
 ### 5.1 Final Predictions
 
 ![image](https://user-images.githubusercontent.com/50436546/204377451-0603b46f-4517-4920-a195-afe6a8b0a3fe.png)
+
+### 5.2 Reference
+
+https://www.kaggle.com/code/gpreda/santander-eda-and-prediction 
+https://www.kaggle.com/code/allunia/santander-customer-transaction-eda
