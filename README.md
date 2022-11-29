@@ -78,6 +78,7 @@ After understanding the business background and the problem we seek to solve, we
 
 Then, we started to try different models including Logistic Regression, Random Forest, XGBoost and LightGBM. We compared these models and decided to stick with LightGBM. Finally after all algorithms have been validated, trained and tested, we ended up using LightGBM model with the help of Bayesian Optimization to pick the best hyperparameters and Stratified K Fold to elevate the AUC score on our validation dataset. After the model being built, by plotting the feature importance among all the features we have, we know the weighted contribution of each feature to our final predictions.
 
+![image](https://user-images.githubusercontent.com/50436546/204637646-8753d75f-c83e-420f-b97a-274d5ae8601a.png)
 
 
 ### 3.2. Data Exploration
@@ -418,3 +419,4 @@ This graph above shows the features that have the 10 highest feature importance 
 
 https://www.kaggle.com/code/gpreda/santander-eda-and-prediction 
 https://www.kaggle.com/code/allunia/santander-customer-transaction-eda
+https://www.kaggle.com/code/mjbahmani/santander-ml-explainability
