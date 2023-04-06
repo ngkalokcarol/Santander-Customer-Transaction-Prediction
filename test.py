@@ -1,27 +1,20 @@
-# Create an empty master table
-master_table_df = pd.DataFrame(columns=['badgenumber'] + transformed_question_list_df[''].tolist())
+import pandas as pd
 
-# Iterate through each row of the transform_df and merge the data into the master table
-for index, row in transform_df.iterrows():
+# Define the column names for the master table
+columns = ['badgenumber'] + transformed_question_list_df.columns[1:].tolist()
+
+# Create the master table with 10 rows for the 10 distinct badgenumbers
+master_table_df = pd.DataFrame(columns=columns)
+master_table_df['badgenumber'] = transform_df['badgenumber'].unique()
+
+# Iterate through each row of the master table and set the values for each question
+for index, row in master_table_df.iterrows():
     badgenumber = row['badgenumber']
-    answer_id = row['answer_id']
-    answer_text = row['answer_text']
-    
-    # Find the corresponding question id for the answer id in question_answer_list
-    question_id = question_answer_list.loc[question_answer_list['answer_id'] == answer_id, 'question_id'].iloc[0]
-    
-    # Update the corresponding value in the master table
-    master_table_df.loc[master_table_df['badgenumber'] == badgenumber, str(question_id)] = answer_text
-    
-# Set the index of the master table as 'badgenumber'
-master_table_df.set_index('badgenumber', inplace=True)
-
-# Merge transformed_question_list_df into the master table
-master_table_df = pd.merge(master_table_df, transformed_question_list_df, left_index=True, right_index=True)
-
-# Reset the index and rename the index column to an empty string
-master_table_df.reset_index(inplace=True)
-master_table_df.rename(columns={'index': ''}, inplace=True)
-
-# Display the master table
-print(master_table_df)
+    for col in transformed_question_list_df.columns[1:]:
+        question_id = int(col.split('_')[1])
+        answer_id = transform_df.loc[transform_df['badgenumber'] == badgenumber, 'answer_id'].iloc[0]
+        if answer_id in question_answer_list.loc[question_answer_list['question_id'] == question_id, 'answer_id'].tolist():
+            answer_text = question_answer_list.loc[(question_answer_list['question_id'] == question_id) & (question_answer_list['answer_id'] == answer_id), 'answer_text'].iloc[0]
+            master_table_df.loc[index, col] = answer_text
+        else:
+            master_table_df.loc[index, col] = ''
