@@ -1,13 +1,19 @@
-def extract_answerIds(row):
-    answer_ids_str = row['profileresponses']
-    answer_ids = re.findall(r'"answerIds":\s*\[([\d,\s]*)\]', answer_ids_str)
-    if answer_ids:
-        answer_ids = answer_ids[0].split(',')
-        answer_ids = [int(id) for id in answer_ids if id.strip().isdigit()]
-    else:
-        answer_ids = []
+# Define a function to extract answer IDs from the profileresponses column
+def extract_answerIds(profileresponses):
+    answer_ids = []
+    for response in profileresponses:
+        if response['answerIds']:
+            answer_ids.extend(response['answerIds'])
     return answer_ids
 
-df['answerIds'] = df.apply(extract_answerIds, axis=1)
+# Load the input data into a Pandas DataFrame
+df = pd.read_csv('input.csv')
 
-print(df.head())
+# Convert the profileresponses column from a string to a list of dictionaries
+df['profileresponses'] = df['profileresponses'].apply(eval)
+
+# Extract the answer IDs from the profileresponses column
+df['answerIds'] = df['profileresponses'].apply(extract_answerIds)
+
+# Convert the answerIds column to a string
+df['answerIds'] = df['answerIds'].apply(str)
