@@ -9,4 +9,4 @@ def get_related_answer(row):
         return row['related_answer']
 
 # create the related_answer column in JISJA23_2
-JISJA23['related_answer'] = JISJA23['answer_id'].apply(get_related_answer, args=(df3,))
+JISJA23['related_answer'] = JISJA23.apply(get_related_answer, args=(df3,), axis=1)
