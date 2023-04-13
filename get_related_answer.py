@@ -1,9 +1,10 @@
 def convert_to_list(row):
-    if pd.isna(row):
-        return np.nan
-    try:
-        return [int(num) for num in row.split(",")]
-    except ValueError:
+    if isinstance(row, str):
+        try:
+            return [int(num) for num in row.split(",")]
+        except ValueError:
+            return np.nan
+    else:
         return np.nan
     
 JISJA23['answer_id'] = JISJA23['answer_id'].apply(convert_to_list)
