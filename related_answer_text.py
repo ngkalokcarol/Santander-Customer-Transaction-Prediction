@@ -1,17 +1,8 @@
-# explode the lists in JISJA23
-JISJA23 = JISJA23.explode('related_answer')
+# convert answer_id column in B2B_Questions_Answers to integer
+B2B_Questions_Answers['answer_id'] = B2B_Questions_Answers['answer_id'].astype(int)
 
-# join the dataframes using 'answer_id' column in B2B_Questions_Answers and 'related_answer' in JISJA23
+# merge the datasets on answer_id
 merged_df = JISJA23.merge(B2B_Questions_Answers, left_on='related_answer', right_on='answer_id', how='left')
 
-# create new column 'related_answer_text' containing answer_text values
-merged_df['related_answer_text'] = merged_df['answer_text']
-
-# group the rows by the original index and aggregate the 'related_answer_text' values into lists
-merged_df = merged_df.groupby(merged_df.index)['related_answer_text'].apply(list)
-
-# merge the aggregated 'related_answer_text' column with the original dataframe
-JISJA23 = pd.concat([JISJA23, merged_df], axis=1)
-
-# print the resulting dataframe
-print(JISJA23)
+# create a new column 'related_answer_text' by mapping answer_text to related_answer
+merged_df['related_answer_text'] = merged_df['related_answer'].apply(lambda x: [B2B_Questions_Answers.loc[B2B_Questions_Answers['answer_id'] == i, 'answer_text'].values[0] for i in x.split(',') if i.isdigit()] if isinstance(x, str) else x)
