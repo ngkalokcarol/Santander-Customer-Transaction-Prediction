@@ -1,11 +1,26 @@
-# apply the function to the answer_id column in JISJA23
-JISJA23['answer_id'] = JISJA23['answer_id'].apply(convert_to_list)
+# Merge the JISJA23 and B2B_Questions_Answers datasets on the 'answer_id' column
+merged_df = JISJA23.merge(B2B_Questions_Answers, left_on='related_answer', right_on='answer_id', how='left')
 
-# merge the JISJA23 and B2B_Questions_Answers datasets on the 'answer_id' column
-merged_df = pd.merge(JISJA23, B2B_Questions_Answers, left_on='answer_id', right_on='answer_id', how='left')
+# Create an empty list to store the related answer texts
+related_answer_text = []
 
-# group the merged dataframe by 'answer_id' and 'question_id', and aggregate the 'answer_text' column
-grouped_df = merged_df.groupby(['answer_id', 'question_id'])['answer_text'].apply(list).reset_index(name='related_answer_text')
-
-# merge the grouped dataframe back into the original JISJA23 dataframe
-final_df = pd.merge(JISJA23, grouped_df, on=['answer_id', 'question_id'], how='left')
+# Iterate over the rows in the merged dataframe
+for i, row in merged_df.iterrows():
+    # Get the related answers for the current row
+    related_answers = row['related_answer']
+    
+    # If there are no related answers, append an empty list to the related_answer_text list
+    if pd.isna(related_answers):
+        related_answer_text.append([])
+    else:
+        # Split the related answers into a list of integers
+        related_answers = [int(x) for x in related_answers.split(',')]
+        
+        # Get the corresponding answer texts from B2B_Questions_Answers
+        answer_texts = B2B_Questions_Answers.loc[B2B_Questions_Answers['answer_id'].isin(related_answers), 'answer_text'].tolist()
+        
+        # Append the answer texts to the related_answer_text list
+        related_answer_text.append(answer_texts)
+        
+# Add the related_answer_text column to the merged dataframe
+merged_df['related_answer_text'] = related_answer_text
