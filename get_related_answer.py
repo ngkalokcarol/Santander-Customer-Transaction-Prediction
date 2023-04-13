@@ -1,16 +1,13 @@
-def get_related_answer(row, df):
-    """
-    Function to match the answer IDs between two data frames and create a new column 'related_answer' in the first data
-    frame with the matching IDs.
-    """
-    if isinstance(row['answer_id'], list) and 'related_answer' not in row.index:
+# define a function to get related answer ids
+def get_related_answer(row):
+    if isinstance(row['answer_id'], list) and pd.isna(row['related_answer']):
         related_answer = []
         for ans_id in row['answer_id']:
-            if ans_id in df['answer_id'].values:
+            if ans_id in df3['answer_id'].values:
                 related_answer.append(ans_id)
-        return related_answer if related_answer else np.nan
+        return related_answer if related_answer else None
     else:
         return row['related_answer']
 
-# create the related_answer column in JISJA23_2
-JISJA23['related_answer'] = JISJA23.apply(get_related_answer, args=(df3,), axis=1)
+# apply the function to create a related_answer column in JISJA23
+JISJA23['related_answer'] = JISJA23.apply(get_related_answer, axis=1)
