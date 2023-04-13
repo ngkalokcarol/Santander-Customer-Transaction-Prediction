@@ -1,4 +1,6 @@
 def convert_to_list(row):
+    if pd.isna(row):
+        return np.nan
     try:
         return [int(num) for num in row.split(",")]
     except ValueError:
