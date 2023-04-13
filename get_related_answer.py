@@ -1,3 +1,15 @@
+def convert_to_list(row):
+    try:
+        return [int(num) for num in row.split(",")]
+    except ValueError:
+        return np.nan
+    
+JISJA23['answer_id'] = JISJA23['answer_id'].apply(convert_to_list)
+
+
+
+
+
 # define a function to get the related answers
 def get_related_answer(row, df):
     if isinstance(row['answer_id'], list) and pd.isnull(row['related_answer']):
