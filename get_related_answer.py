@@ -3,7 +3,7 @@ def get_related_answer(row, df):
     Function to match the answer IDs between two data frames and create a new column 'related_answer' in the first data
     frame with the matching IDs.
     """
-    if isinstance(row['answer_id'], list) and pd.isna(row['related_answer']):
+    if isinstance(row['answer_id'], list) and 'related_answer' not in row.index:
         related_answer = []
         for ans_id in row['answer_id']:
             if ans_id in df['answer_id'].values:
