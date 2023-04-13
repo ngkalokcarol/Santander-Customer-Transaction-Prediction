@@ -1,4 +1,3 @@
-# define a function to get related answer ids
 def get_related_answer(row):
     if isinstance(row['answer_id'], list) and pd.isna(row['related_answer']):
         related_answer = []
@@ -9,5 +8,4 @@ def get_related_answer(row):
     else:
         return row['related_answer']
 
-# apply the function to create a related_answer column in JISJA23
 JISJA23['related_answer'] = JISJA23.apply(get_related_answer, axis=1)
