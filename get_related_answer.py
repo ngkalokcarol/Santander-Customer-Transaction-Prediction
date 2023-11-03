@@ -7,7 +7,7 @@ def convert_to_list(row):
     else:
         return np.nan
     
-JISJA23['answer_id'] = JISJA23['answer_id'].apply(convert_to_list)
+df['answer_id'] = df['answer_id'].apply(convert_to_list)
 
 
 
@@ -24,6 +24,6 @@ def get_related_answer(row):
     else:
         return row['related_answer']
     
-# create the related_answer column in JISJA23
-JISJA23['related_answer'] = None
-JISJA23['related_answer'] = JISJA23.apply(get_related_answer, axis=1)
+# create the related_answer column in df
+df['related_answer'] = None
+df['related_answer'] = df.apply(get_related_answer, axis=1)
